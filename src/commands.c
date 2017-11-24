@@ -1810,264 +1810,264 @@ p_argv(int argc, char **argv)
 {
 	int z;
 
-	for (z = 0; z < argc; z++)
-		printf("%s%s", z ? " " : "[", argv[z]);
-	printf("]");
-	return;
-}
-
-/*
- * for the purpose of interface handler routines, 1 here is failure and
- * 0 is success
- */
-int
-el_burrito(EditLine *el, int argc, char **argv)
-{
-	char *colon;
-	int val;
-
-	if (!editing)	/* Nothing to parse, fail */
-		return(1);
+		for (z = 0; z < argc; z++)
+			printf("%s%s", z ? " " : "[", argv[z]);
+		printf("]");
+		return;
+	}
 
 	/*
-	 * el_parse will always return a non-error status if someone specifies
-	 * argv[0] with a colon.  The idea of the colon is to allow host-
-	 * specific commands, which is really only useful in .editrc, so
-	 * it is invalid here.
+	 * for the purpose of interface handler routines, 1 here is failure and
+	 * 0 is success
 	 */
-	colon = strchr(argv[0], ':');
-	if (colon)
+	int
+	el_burrito(EditLine *el, int argc, char **argv)
+	{
+		char *colon;
+		int val;
+
+		if (!editing)	/* Nothing to parse, fail */
+			return(1);
+
+		/*
+		 * el_parse will always return a non-error status if someone specifies
+		 * argv[0] with a colon.  The idea of the colon is to allow host-
+		 * specific commands, which is really only useful in .editrc, so
+		 * it is invalid here.
+		 */
+		colon = strchr(argv[0], ':');
+		if (colon)
+			return(1);
+
+		val = el_parse(el, argc, (const char **)argv);
+
+		if (val == 0)
+			return(0);
+		else
+			return(1);
+	}
+
+	char *
+	cprompt(void)
+	{
+		int pr;
+		char tmp[4];
+
+		if (cli_rtable)
+			snprintf(tmp, sizeof(tmp), "%d", cli_rtable);
+
+		gethostname(hbuf, sizeof(hbuf));
+		pr = priv | cli_rtable;
+		snprintf(prompt, sizeof(prompt), "%s%s%s%s%s%s%s", hbuf, pr ? "" : "",
+		    priv ? "#" : ">", priv && cli_rtable ? "-" : "",
+		    cli_rtable ? "rtable " : "", cli_rtable ? tmp : "",
+		    pr ?"" : "");
+
+		return(prompt);
+	}
+
+	char *
+	iprompt(void)
+	{
+		gethostname(hbuf, sizeof(hbuf));
+		snprintf(prompt, sizeof(prompt), "%s(%s-%s)/", hbuf,
+		    bridge ? "bridge" : "interface", ifname);
+
+		return(prompt);
+	}
+
+	int
+	wr_startup(void)
+	{
+		char *argv[] = { SAVESCRIPT, NSHRC_TEMP, '\0' };
+		
+		if (wr_conf(NSHRC_TEMP))
+			printf("%% Saving configuration\n");
+		else
+			printf("%% Unable to save configuration: %s\n",
+			    strerror(errno));
+
+		cmdargs(SAVESCRIPT, argv);
+
 		return(1);
+	}
 
-	val = el_parse(el, argc, (const char **)argv);
+	/*
+	 * Save configuration
+	 */
+	int
+	wr_conf(char *fname)
+	{
+		FILE *rchandle;
+		int error = 1;
 
-	if (val == 0)
+		if ((rchandle = fopen(fname, "w")) == NULL) 
+			error = 0;
+		else {
+			conf(rchandle);
+			fclose(rchandle);
+		}
+
+		return (error);
+	}
+
+	/*
+	 * Reboot
+	 */
+	int
+	nreboot(void)
+	{
+		printf ("%% Reboot initiated\n");
+		if (reboot (RB_AUTOBOOT) == -1)
+			printf("%% reboot: RB_AUTOBOOT: %s\n", strerror(errno));
 		return(0);
-	else
+	}
+		       
+	int
+	halt(void)
+	{
+		printf ("%% Shutdown initiated\n");
+		if (reboot (RB_HALT) == -1)
+			printf("%% reboot: RB_HALT: %s\n", strerror(errno));
+		return(0);
+	}
+
+	/*
+	 * Flush wrappers
+	 */
+	int
+	flush_ip_routes(void)
+	{
+		flushroutes(AF_INET, AF_INET);
+
+		return(0);
+	}
+
+	int
+	flush_arp_cache(void)
+	{
+		flushroutes(AF_INET, AF_LINK);
+
+		return(0);
+	}
+
+	/*
+	 * Show wrappers
+	 */
+	int
+	pr_conf(int argc, char **argv)
+	{
+		if (priv != 1) {
+			printf ("%% Privilege required\n");
+			return(0);
+		}
+
+		if (!wr_conf(NSHRC_TEMP)) {
+			printf("%% Couldn't generate configuration\n");
+			return(0);
+		}
+
+		more(NSHRC_TEMP);
+
 		return(1);
-}
-
-char *
-cprompt(void)
-{
-	int pr;
-	char tmp[4];
-
-	if (cli_rtable)
-		snprintf(tmp, sizeof(tmp), "%d", cli_rtable);
-
-	gethostname(hbuf, sizeof(hbuf));
-	pr = priv | cli_rtable;
-	snprintf(prompt, sizeof(prompt), "%s%s%s%s%s%s%s>", hbuf, pr ? "(" : "",
-	    priv ? "p" : "", priv && cli_rtable ? "-" : "",
-	    cli_rtable ? "rtable " : "", cli_rtable ? tmp : "",
-	    pr ?")" : "");
-
-	return(prompt);
-}
-
-char *
-iprompt(void)
-{
-	gethostname(hbuf, sizeof(hbuf));
-	snprintf(prompt, sizeof(prompt), "%s(%s-%s)/", hbuf,
-	    bridge ? "bridge" : "interface", ifname);
-
-	return(prompt);
-}
-
-int
-wr_startup(void)
-{
-	char *argv[] = { SAVESCRIPT, NSHRC_TEMP, '\0' };
-	
-	if (wr_conf(NSHRC_TEMP))
-		printf("%% Saving configuration\n");
-	else
-		printf("%% Unable to save configuration: %s\n",
-		    strerror(errno));
-
-	cmdargs(SAVESCRIPT, argv);
-
-	return(1);
-}
-
-/*
- * Save configuration
- */
-int
-wr_conf(char *fname)
-{
-	FILE *rchandle;
-	int error = 1;
-
-	if ((rchandle = fopen(fname, "w")) == NULL) 
-		error = 0;
-	else {
-		conf(rchandle);
-		fclose(rchandle);
 	}
 
-	return (error);
-}
+	/*
+	 * Show startup config
+	 */
+	int
+	pr_s_conf(int argc, char **argv)
+	{
+		int ret;
 
-/*
- * Reboot
- */
-int
-nreboot(void)
-{
-	printf ("%% Reboot initiated\n");
-	if (reboot (RB_AUTOBOOT) == -1)
-		printf("%% reboot: RB_AUTOBOOT: %s\n", strerror(errno));
-	return(0);
-}
-               
-int
-halt(void)
-{
-	printf ("%% Shutdown initiated\n");
-	if (reboot (RB_HALT) == -1)
-		printf("%% reboot: RB_HALT: %s\n", strerror(errno));
-	return(0);
-}
+		if (priv != 1) {
+			printf ("%% Privilege required\n");
+			return(0);
+		}
 
-/*
- * Flush wrappers
- */
-int
-flush_ip_routes(void)
-{
-	flushroutes(AF_INET, AF_INET);
-
-	return(0);
-}
-
-int
-flush_arp_cache(void)
-{
-	flushroutes(AF_INET, AF_LINK);
-
-	return(0);
-}
-
-/*
- * Show wrappers
- */
-int
-pr_conf(int argc, char **argv)
-{
-	if (priv != 1) {
-		printf ("%% Privilege required\n");
-		return(0);
+		ret = more(NSHRC);
+		
+		return(ret);
 	}
 
-	if (!wr_conf(NSHRC_TEMP)) {
-		printf("%% Couldn't generate configuration\n");
-		return(0);
-	}
+	int
+	pr_routes(int argc, char **argv)
+	{
+		switch(argc) {
+		case 2:
+			/* show primary routing table */
+			p_rttables(AF_INET, cli_rtable, 0);
+			break;
+		case 3:
+			/* show a specific route */
+			show_route(argv[2], cli_rtable);
+			break;
+		}
 
-	more(NSHRC_TEMP);
-
-	return(1);
-}
-
-/*
- * Show startup config
- */
-int
-pr_s_conf(int argc, char **argv)
-{
-	int ret;
-
-	if (priv != 1) {
-		printf ("%% Privilege required\n");
-		return(0);
-	}
-
-	ret = more(NSHRC);
-	
-	return(ret);
-}
-
-int
-pr_routes(int argc, char **argv)
-{
-	switch(argc) {
-	case 2:
-		/* show primary routing table */
-		p_rttables(AF_INET, cli_rtable, 0);
-		break;
-	case 3:
-		/* show a specific route */
-		show_route(argv[2], cli_rtable);
-		break;
-	}
-
-	return 0;
-}
-
-int
-pr_routes6(int argc, char **argv)
-{
-	switch(argc) {
-	case 2:
-		/* show primary routing table */
-		p_rttables(AF_INET6, cli_rtable, 0);
-		break;
-	case 3:
-		/* show a specific route */
-		show_route(argv[2], cli_rtable);
-		break;
-	}
-
-	return 0;
-}
-
-int
-pr_arp(int argc, char **argv)
-{
-	switch(argc) {
-	case 2:
-		/* show arp table */
-		arpdump();
-		break;
-	case 3:
-		/* specific address */
-		arpget(argv[2]);
-		break;
-	}
-	return 0;
-}
-
-int
-pr_sadb(int argc, char **argv)
-{
-	p_rttables(PF_KEY, 0, 0);
-
-	return 0;
-}
-
-int
-pr_kernel(int argc, char **argv)
-{
-	struct stt *x;
-
-	if (argc < 3 || argv[2][0] == '?') {
-		gen_help((char **)stts, "show kernel", "statistics",
-		    sizeof(struct stt));
 		return 0;
 	}
-	x = (struct stt *) genget(argv[2], (char **)stts, sizeof(struct stt));
-	if (x == 0) {
-		printf("%% Invalid argument %s\n", argv[2]);
-		return 0;
-	} else if (Ambiguous(x)) {
-		printf("%% Ambiguous argument %s\n", argv[2]);
+
+	int
+	pr_routes6(int argc, char **argv)
+	{
+		switch(argc) {
+		case 2:
+			/* show primary routing table */
+			p_rttables(AF_INET6, cli_rtable, 0);
+			break;
+		case 3:
+			/* show a specific route */
+			show_route(argv[2], cli_rtable);
+			break;
+		}
+
 		return 0;
 	}
-	if (x->handler) /* not likely to be false */
-		(*x->handler)();
+
+	int
+	pr_arp(int argc, char **argv)
+	{
+		switch(argc) {
+		case 2:
+			/* show arp table */
+			arpdump();
+			break;
+		case 3:
+			/* specific address */
+			arpget(argv[2]);
+			break;
+		}
+		return 0;
+	}
+
+	int
+	pr_sadb(int argc, char **argv)
+	{
+		p_rttables(PF_KEY, 0, 0);
+
+		return 0;
+	}
+
+	int
+	pr_kernel(int argc, char **argv)
+	{
+		struct stt *x;
+
+		if (argc < 3 || argv[2][0] == '?') {
+			gen_help((char **)stts, "show kernel", "statistics",
+			    sizeof(struct stt));
+			return 0;
+		}
+		x = (struct stt *) genget(argv[2], (char **)stts, sizeof(struct stt));
+		if (x == 0) {
+			printf("%% Invalid argument %s\n", argv[2]);
+			return 0;
+		} else if (Ambiguous(x)) {
+			printf("%% Ambiguous argument %s\n", argv[2]);
+			return 0;
+		}
+		if (x->handler) /* not likely to be false */
+			(*x->handler)();
 		
 	return(0);
 }
