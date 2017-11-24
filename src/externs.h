@@ -12,7 +12,7 @@ struct rtdump {
 };
 
 extern char *__progname;	/* duh */
-extern char *vers;		/* the version of nsh */
+extern char *vers;		    /* the version of nsh */
 extern char saveline[1024];	/* command line */
 extern char line[1024];		/* command line for makeargv() */
 extern int  margc;		/* makeargv() arg count */
@@ -33,7 +33,7 @@ extern HistEvent ev;		/* ev */
 
 /* defaults */
 #define	DEFAULT_MTU	1500		/* net.inet.ip.defmtu */
-#define	DEFAULT_TTL	64		/* net.inet.ip.defttl */
+#define	DEFAULT_TTL	64		    /* net.inet.ip.defttl */
 #define DEFAULT_MTTL	255		/* net.mpls.ttl */
 #define ESP_UDPENCAP_PORT 4500		/* net.inet.esp.udpencap_port */
 
@@ -124,7 +124,7 @@ extern char metricnames[];
 
 /* ctl.c */
 /* tmp config locations */
-#define PFCONF_TEMP	"/var/run/pf.conf"
+#define PFCONF_TEMP	    "/var/run/pf.conf"
 #define OSPFCONF_TEMP	"/var/run/ospfd.conf"
 #define OSPF6CONF_TEMP	"/var/run/ospf6d.conf"
 #define EIGRPCONF_TEMP	"/var/run/eigrpd.conf"
@@ -144,7 +144,7 @@ extern char metricnames[];
 #define NPPPCONF_TEMP	"/var/run/npppd.conf"
 #define FTPPROXY_TEMP	"/var/run/ftp-proxy"
 #define TFTPPROXY_TEMP	"/var/run/tftp-proxy"
-#define TFTP_TEMP	"/var/run/tftpd"
+#define TFTP_TEMP	    "/var/run/tftpd"
 #define RESOLVCONF_TEMP	"/var/run/resolv.conf"
 #define RESOLVCONF_SYM	"/var/run/resolv.conf.symlink"
 #define RESOLVCONF_DHCP	"/var/run/resolv.conf.dhcp"
@@ -153,7 +153,7 @@ extern char metricnames[];
 #define SMTPCONF_TEMP 	"/var/run/smtpd.conf"
 #define LDAPCONF_TEMP	"/var/run/ldapd.conf"
 #define IFSTATECONF_TEMP "/var/run/ifstated.conf"
-#define MOTD_TEMP "/var/run/motd"
+#define MOTD_TEMP        "/var/run/motd"
 
 /* argument list replacement */
 #define OPT     (void *)1
@@ -163,6 +163,7 @@ extern char metricnames[];
 #define SIZE_CONF_TEMP 64
 int ctlhandler(int, char **, char *);
 void rmtemp(char *);
+
 /* control programs */
 #define PFCTL		"/sbin/pfctl"
 #define OSPFCTL		"/usr/sbin/ospfctl"
@@ -178,6 +179,7 @@ void rmtemp(char *);
 #define SNMPCTL		"/usr/sbin/snmpctl"
 #define SMTPCTL		"/usr/sbin/smtpctl"
 #define LDAPCTL		"/usr/sbin/ldapctl"
+
 struct ctl {
 	char *name;
 	char *help;

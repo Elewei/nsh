@@ -1858,7 +1858,7 @@ cprompt(void)
 
 	gethostname(hbuf, sizeof(hbuf));
 	pr = priv | cli_rtable;
-	snprintf(prompt, sizeof(prompt), "%s%s%s%s%s%s%s/", hbuf, pr ? "(" : "",
+	snprintf(prompt, sizeof(prompt), "%s%s%s%s%s%s%s>", hbuf, pr ? "(" : "",
 	    priv ? "p" : "", priv && cli_rtable ? "-" : "",
 	    cli_rtable ? "rtable " : "", cli_rtable ? tmp : "",
 	    pr ?")" : "");

@@ -1,17 +1,8 @@
 /*
- * Copyright (c) 2002-2013 Chris Cappuccio <chris@nmedia.net>
+ * 
+ *  网络Shell主程序
  *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
 #include <stdio.h>
@@ -57,7 +48,7 @@ main(int argc, char *argv[])
 	char rc[PATH_MAX];
 
 	if(getuid() != 0) 
-		printf("%% Functionality limited without root privilege.\n");
+		printf("%% 权限不够.\n");
 
 	pid = getpid();
 
@@ -76,7 +67,7 @@ main(int argc, char *argv[])
 			break;
 		default:
 			usage();
-		}
+	}
 
 	argc -= optind;
 	argv += optind;
@@ -88,14 +79,14 @@ main(int argc, char *argv[])
 	if (iflag)
 		rmtemp(SQ3DBFILE);
 
-	printf("%% NSH v%s\n", vers);
+	printf("%% 防火墙Shell程序 -- v%s\n", vers);
 
 	/* create temporal tables (if they aren't already there) */
 	if (db_create_table_rtables() < 0)
 		printf("%% database rtables creation failed\n");
 	if (db_create_table_flag_x("ctl") < 0)
 		printf("%% database ctl creation failed\n");
-	if (db_create_table_flag_x("dhcrelay") < 0)
+	if (db_create_table_flag_x("dhcprelay") < 0)
 		printf("%% database dhcrelay creation failed\n");
 	if (db_create_table_flag_x("ipv6linklocal") < 0)
 		printf("%% database ipv6linklocal creation failed\n");

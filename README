@@ -1,4 +1,4 @@
-nsh//network config shell//Chris Cappuccio <chris@nmedia.net> version 1.0
+nsh//网络配置Shell//Chris Cappuccio <chris@nmedia.net> version 1.0
 
 NSH is a CLI intended for OpenBSD-based network appliances. It replaces
 ifconfig, sysctl and route with its own simple command language, and
@@ -6,19 +6,32 @@ encapsulates configuration for other daemons into one place, effectively
 replacing /etc/netstart and parts of /etc/rc for appliance-style usage.
 
 Daemons and services encapsulated by nsh:
-
-pf, ospfd, ospf6d, bgpd, ripd, ldpd, relayd, ipsecctl, iked, rtadvd,
-dvmrpd, sasyncd, dhcpd, snmpd, sshd, ntpd, ifstated, tftp-proxy, ftp-proxy,
-tftpd, npppd, resolv.conf, inetd, smtpd, ldapd, ifstated
-
-NSH is freely licensed, in the BSD style.
-
-In conjunction with the OpenBSD kernel and the daemons you wish to control,
-you have a fully functioning system.
-
-See MANUAL for installation instructons and command set.
-
-See TODO for details on implementation status and future ideas.
+pf, 
+ospfd, 
+ospf6d, 
+bgpd, 
+ripd, 
+ldpd, 
+relayd, 
+ipsecctl, 
+iked, 
+rtadvd,
+dvmrpd, 
+sasyncd, 
+dhcpd, 
+snmpd, 
+sshd, 
+ntpd, 
+ifstated, 
+tftp-proxy, 
+ftp-proxy,
+tftpd, 
+npppd, 
+resolv.conf, 
+inetd, 
+smtpd, 
+ldapd, 
+ifstated
 
 See http://github.com/yellowman/nsh/ for current source code repository and
 see http://www.nmedia.net/nsh/ for example configurations and mailing
