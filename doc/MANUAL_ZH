@@ -1,0 +1,66 @@
+/* 网络SHELL命令手册 */
+           -By 张启卫<mzhangqiwei@163.com>
+
+目录
+---
+
+1. 简介
+
+2. 安装
+
+
+第一章： 简介
+------------
+网络SHELL是一个类似于思科命令行的工具，现在可以
+配置路由、防火墙、NAT、速率、QoS、网桥、IP隧道
+以及IPSec，具有保存配置与恢复配置的功能。
+
+此程序的目标是实现一个统一的路由器与防火墙配置，
+方便网络/系统管理员快速保存与恢复配置，查看当前
+网络状态信息。
+
+第二章： 安装
+------------
+
+Step 1. 安装环境
+  OpenBSD系统
+
+Step 2. 编译nsh 
+  
+  $tar zxvf nsh.tar.gz
+  ...
+  $cd nsh
+  $make
+  ...
+
+当编译完成后，会生成nsh二进制文件，将他复制到目录
+/user/local/bin/nsh
+
+Step 3. 复制相关配置文件
+
+# cp save-ro.sh /usr/local/bin/save.sh
+# cp save-rw.sh /usr/local/bin/save.sh
+
+# cp /etc/pf.conf /var/run/pf.conf.0
+# cp /etc/dhcpd.conf /var/run/dhcpd.conf.0
+# cp /etc/ssh/sshd_config /var/run/sshd.conf.0
+# mv /etc/resolv.conf /var/run/resolv.conf.0
+# ln -s /var/run/resolv.conf.symlink /etc/resolv.conf
+# mv /etc/motd /var/run/motd.0
+# ln -s /var/run/motd.0 /etc/motd
+# nsh
+% NSH v1.0
+nsh/enable
+nsh(p)/pf enable
+nsh(p)/dhcp enable
+nsh(p)/sshd enable
+nsh(p)/dns local-control
+nsh/write
+% Configuration saved
+nsh/quit
+
+
+
+
+
+
