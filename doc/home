@@ -1,0 +1,107 @@
+!
+hostname krad
+!
+dns rules
+ search yahoo.com
+ nameserver 128.138.243.151
+ nameserver 199.249.19.1
+!
+dns local-control
+!
+interface lo0
+ group lo
+ ip 127.0.0.1/8
+!
+interface rl0
+ description ADSL modem
+ group egress
+ ip 66.94.234.13/28
+ alias 192.168.8.5/24
+!
+interface rl1
+ description Internal network
+ alias 172.16.3.1/24
+!
+interface enc0
+ shutdown
+!
+!
+ip forwarding
+no ddb panic
+!
+route 0.0.0.0/0 66.94.234.1
+!
+pf rules
+ ext_if="rl0"
+ int_if="rl1"
+ #
+ # Enable ALTQ on outgoing $ext_if traffic with 505Kbps interface
+ # token bucket (this happens to be the ADSL's upstream sync speed,
+ # minus 18% ATM/LLC overhead)
+ altq on $ext_if priq bandwidth 505Kb queue { q_pri, q_ack, q_def }
+ #
+ # Define ALTQ packet queues (7 is highest)
+ queue q_pri priority 7
+ queue q_ack priority 5
+ queue q_def priority 1 priq(default)
+ #
+ # ftp-proxy nat rule creation anchors
+ nat-anchor "ftp-proxy/*"
+ rdr-anchor "ftp-proxy/*"
+ #
+ # ftp-proxy redirect, send end users to proxy daemon
+ rdr pass on $int_if proto tcp from 172.16.3.0/24 to any port 21 -> \
+ 127.0.0.1 port 8021
+ #
+ # The DSL modem is at 192.168.8.1.  This way we can get to it from
+ # internal network without changing its configuration from default
+ nat on $ext_if from any to 192.168.8.0/24 -> 192.168.8.5
+ #
+ # NAT for internal connections to outside world, local IPs get 
+ # rewritten to the first, public IP address on $ext_if
+ nat on $ext_if from 172.16.3.0/24 to !192.168.8.0/24 -> ($ext_if:0)
+ #
+ # ftp-proxy pf rule creation anchor
+ anchor "ftp-proxy/*"
+ #
+ # Classify TCP tos lowdelay / ACK packets into q_ack
+ pass out on $ext_if proto tcp from any to any queue (q_def, q_ack)
+ pass in on $ext_if proto tcp from any t
+
+o any queue (q_def, q_ack)
+ #
+ # Classify SSH(TCP port 22) tos lowdelay / ACK packets into q_pri
+ pass out on $ext_if proto tcp from any to any port 22 queue (q_def, q_pri)
+ pass in on $ext_if proto tcp from any to any port 22 queue (q_def, q_pri)
+!
+pf enable
+pf reload
+!
+dhcp rules
+ option domain-name "yahoo.com";
+ option domain-name-servers 128.138.243.151, 199.249.19.1;
+ subnet 172.16.3.0 netmask 255.255.255.0 {
+ 	option routers 172.16.3.1;
+ 	option tftp-server-name "172.16.3.10";
+ 	next-server 172.16.3.10;
+ 	filename "pxeboot";
+ 	range 172.16.3.100 172.16.3.240;
+ }
+!
+dhcp enable
+!
+ntp rules
+ #listen on *
+ servers us.pool.ntp.org
+!
+ntp enable
+!
+ftp-proxy enable
+!
+sshd rules
+ Protocol 2
+ ListenAddress 172.16.3.1
+ Subsystem sftp /usr/libexec/sftp-server
+!
+sshd enable
+!

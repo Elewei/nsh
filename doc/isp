@@ -1,0 +1,160 @@
+!
+hostname edge4
+!
+dns rules
+ search yahoo.com
+ nameserver 128.138.243.151
+ nameserver 199.249.19.1
+!
+dns local-control
+!
+interface lo0
+ group lo
+ ip 35.8.60.242/32
+!
+interface bge0
+ description sw3.bend2 trunk
+ no shutdown
+!
+interface bge1
+ shutdown
+!
+interface enc0
+ shutdown
+!
+interface vlan0
+ description management vlan
+ vlan 39 parent bge0
+ group vlan
+ ip 35.8.60.4/29
+!
+interface vlan26
+ description Core Net 2
+ vlan 26 parent bge0
+ group vlan egress
+ ip 35.8.68.242/28
+!
+interface vlan220
+ description Fort rock
+ vlan 220 parent bge0
+ group vlan
+ ip 198.108.1.1/28
+ alias 35.8.77.1/28
+!
+interface vlan199
+ description Those dudes in the downstairs
+ vlan 199 parent bge0
+ group vlan
+ ip 198.108.1.97/27
+!
+interface vlan198
+ description Pooh bear
+ vlan 198 parent bge0
+ group vlan
+ ip 35.8.67.49/29
+!
+interface vlan97
+ description Dialup servers
+ vlan 97 parent bge0
+ group vlan
+ ip 35.8.77.33/29
+!
+interface vlan333
+ description Hurricane Electric upstream
+ vlan 333 parent bge0
+ group vlan
+ ip 216.218.130.254/30
+!
+interface vlan249
+ description Co-Lo
+ vlan 249 parent bge0
+ group vlan
+ ip 35.8.78.17/28
+!
+!
+ip forwarding
+no ddb panic
+!
+route 35.8.77.48/28 35.8.77.36
+route 35.8.77.64/27 35.8.77.36
+route 35.8.77.96/27 35.8.77.37
+route 35.8.77.128/28 35.8.77.37
+route 35.8.77.144/28 35.8.77.38
+route 35.8.77.160/27 35.8.77.38
+route 35.8.91.252/30 35.8.77.14
+!
+ospf rules
+ router-id 35.8.60.242
+ redistribute connected
+ area 0.0.0.0 {
+ 	interface vlan26
+ 	interface lo0 {
+ 		passive
+ 	}
+ }
+!
+ospf enable
+!
+bgp rules
+ AS 22512
+ router-id 35.8.60.242
+ network inet static set community 22512:299
+ network 35.0.0.0/8 set community 22512:300
+ network 198.108.1.0/24 set community 22512:300
+ group internal {
+ 	remote-as 22512
+ 	local-address 35.8.60.242
+ 	neighbor 35.8.60.240
+ 	neighbor 35.8.60.244
+ 	neighbor 35.8.60.246
+ }
+ group internal-limited {
+ # internal hosts that don't take a full route table
+ 	remote-as 22512
+ 	local-address 35.8.60.242
+ 	neighbor 35.8.60.245
+ 	neighbor 35.8.60.253
+ 	neighbor 35.8.60.254
+ }
+ #group customers {
+ #	local-address 35.8.60.242
+ #}
+ neighbor 216.218.130.254 {
+ 	remote-as 6939
+ 	announce all
+ 	local-address 216.218.130.253
+ }
+ 
+ # Default customer localpref
+ #allow from group customers set localpref 107
+ # Customer-influenced localpref
+ #allow from group customers community 22512:80 set localpref 80
+ #allow from group customers community 22512:90 set localpref 90
+ #allow from group customers community 22512:100 set localpref 100
+ #allow from group customers community 22512:110 set localpref 110
+ #allow from group customers community 22512:120 set localpref 120
+ # Blackhole routes
+ #allow from group customers community 22512:666 set nexthop blackhole
+ #allow from group customers community 22512:666 set localpref 500
+ #allow from group customers community 22512:666 set community NO_EXPORT
+ # Internal limited route
+ deny to group internal-limited
+ allow to group internal-limited community 22512:299
+ # Hurricane Electric
+ deny to 216.218.130.254
+ allow to 216.218.130.254 community 22512:300 set prepend-self 1
+!
+bgp enable
+!
+ntp rules
+ servers us.pool.ntp.org
+!
+ntp enable
+!
+sshd rules
+ ListenAddress 35.8.60.4
+ Protocol 2
+ Subsystem sftp /usr/libexec/sftp-server
+!
+sshd enable
+!

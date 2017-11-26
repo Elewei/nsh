@@ -1,0 +1,316 @@
+!
+hostname bc1
+!
+dns rules
+ search yahoo.com
+ nameserver 128.138.243.151
+ nameserver 199.249.19.1
+!
+dns local-control
+!
+interface lo0
+ group lo
+ ip 127.0.0.1/8
+!
+interface bge0
+ description Cisco 2970 trunk
+ no shutdown
+!
+interface bge1
+ shutdown
+!
+interface enc0
+ shutdown
+!
+interface pflog0
+ group pflog
+ shutdown
+!
+interface vlan0
+ description Hurricane Electric ISP
+ vlan 2 parent bge0
+ group vlan egress
+ ip 35.9.68.250/28
+!
+interface vlan1
+ description To Tower
+ vlan 3 parent bge0
+ group vlan
+ ip 172.20.1.1/24
+!
+interface vlan2
+ description Servers
+ vlan 4 parent bge0
+ group vlan
+ ip 35.2.3.1/28
+!
+interface vlan3
+ description Device Management
+ vlan 5 parent bge0
+ group vlan
+ ip 172.20.2.1/24
+!
+interface vlan4
+ description Radio to Sugar
+ vlan 6 parent bge0
+ group vlan
+ ip 172.24.9.1/24
+!
+interface vlan5
+ vlan 30 parent bge0
+ group vlan
+ ip 35.9.85.73/30
+!
+interface vlan6
+ vlan 43 parent bge0
+ group vlan
+ ip 35.9.85.129/29
+!
+interface vlan7
+ vlan 224 parent bge0
+ group vlan
+ ip 35.9.85.45/30
+!
+interface vlan8
+ vlan 47 parent bge0
+ group vlan
+ no shutdown
+!
+interface vlan9
+ vlan 52 parent bge0
+ group vlan
+ ip 35.9.85.181/30
+ shutdown
+!
+interface vlan10
+ vlan 50 parent bge0
+ group vlan
+ ip 35.9.85.237/30
+!
+interface vlan11
+ vlan 223 parent bge0
+ group vlan
+ ip 35.9.85.253/30
+!
+interface vlan12
+ description Customer
+ vlan 232 parent bge0
+ group vlan
+ ip 10.168.30.1/24
+ alias 35.9.85.241/30
+!
+interface vlan13
+ description Office Network
+ vlan 222 parent bge0
+ group vlan
+ ip 172.31.0.1/24
+!
+interface vlan14
+ vlan 8 parent bge0
+ group vlan
+ ip 35.2.3.97/27
+!
+interface vlan15
+ vlan 9 parent bge0
+ group vlan
+ ip 172.28.0.1/16
+!
+interface vlan16
+ group vlan
+ shutdown
+!
+!
+ip forwarding
+no ddb panic
+!
+route 0.0.0.0/0 35.9.68.241
+route 35.9.85.0/24 172.20.1.2
+route 172.20.3.0/24 172.20.1.2
+route 172.21.0.0/16 172.20.1.2
+route 172.22.0.0/16 172.20.1.2
+route 172.23.0.0/16 172.20.1.2
+route 172.24.0.0/16 172.20.1.2
+route 172.29.0.0/16 172.20.1.2
+route 192.168.5.0/24 172.20.1.2
+route 104.7.205.0/24 35.9.85.242
+route 35.2.3.32/27 172.20.1.2
+route 35.2.3.64/27 172.20.1.2
+!
+pf rules
+ set limit states 100000
+ set timeout { adaptive.start 60000, adaptive.end 100000 }
+ # (NAT exit IP range larger than /32 required for more than 65K states)
+ #
+ # Corp Border Controller
+ #
+ table <remote> { 4.4.4.4 5.5.5.5 }
+ #
+ # ftp-proxy nat rule creation anchors
+ nat-anchor "ftp-proxy/*"
+ rdr-anchor "ftp-proxy/*"
+ #
+ # ftp-proxy redirect, send end users to proxy daemon
+ rdr pass on !vlan2 proto tcp from 172.16.0.0/12 to any port 21 -> \
+ 127.0.0.1 port 8021
+ #
+ # Translate private IP addresses to the public IP address of vlan0
+ # as the traffic passes out vlan0
+ #
+ nat on vlan0 from 172.16.0.0/12 -> vlan0
+ #
+ rdr proto tcp from <remote> to 35.2.3.1 port 3389 -> 172.31.0.101
+ #
+ # Special remote access
+ rdr proto tcp from 35.9.68.224/29 to 35.2.3.1 port 2998 -> 10.168.30.3 port 23
+ rdr proto tcp from 35.9.68.224/29 to 35.2.3.1 port 2999 -> 10.168.30.3 port 80
+ rdr proto tcp from 35.9.68.224/29 to 35.2.3.1 port 3000 -> 10.168.30.3 port 3000
+ #
+ # outside test access
+ rdr proto tcp from any to 35.2.3.1 port 8887 -> 172.24.6.9 port 23
+ rdr proto tcp from any to 35.2.3.1 port 8888 -> 172.24.6.9 port 80
+ #
+ # Restricted access subnets
+ #
+ table <RestrictedAccess> { 172.22.0.0/24 }
+ #
+ # RestrictedAccess Redirect
+ rdr proto tcp from <RestrictedAccess> to any port 80 -> 35.2.3.6 port 81
+ # RestrictedAccess Block
+ block out from <RestrictedAccess> to !35.2.3.0/28
+ pass out from <RestrictedAccess> to 35.9.78.10
+ #
+ #block in proto tcp from 172.22.0.115 to any port = 25
+ #block in proto tcp from 172.22.0.164 to any port = 25
+ #block in proto tcp from 172.21.0.21 to any port = 25
+ #
+ # ftp-proxy pf rule creation anchor
+ anchor "ftp-proxy/*"
+ #
+ # internal office net
+ pass in on vlan13 from 172.31.0.0/24 to any
+ block out on vlan13 from any to any
+ pass out on vlan13 proto tcp from <remote> to any port 3389
+ pass out on vlan13 proto tcp from any to any port 3389
+ #
+ # Block stray packets from the stream
+ #
+ table <local> { 35.9.85.0/24 35.2.3.0/24 }
+ block out on vlan0 from any to <local>
+ #
+ # Block management requests to servers from unauthorized sources
+ #
+ block out on vlan2 proto tcp from !<remote> to any port 22:23
+ block out on vlan2 proto tcp from !<remote> to any port 3389
+ #
+ # Block requests to the HP Printer
+ #
+ block out on vlan2 proto tcp from !172.31.0.0/24 to 35.2.3.13
+ #
+ # Block internet-based management requests for SSH to router itself
+ #
+ block in on vlan0 proto tcp from !<remote> to (vlan0) port 22
+ #
+!
+pf enable
+pf reload
+!
+interface pfsync0
+ group carp pfsync
+ shutdown
+!
+bgp rules
+ AS 22512
+ router-id 35.2.3.1
+ # holdtime min 3
+ listen on 35.9.68.250
+ network 104.7.205.0/24
+ network 35.2.3.0/24
+ network 35.9.79.0/24
+ network 35.9.85.0/24
+ group "he.net" {
+ 	remote-as 6939
+ 	neighbor 35.9.68.241 {
+ 		descr	"HE"
+ 		announce self
+ #		tcp md5sig password mekmitasdigoat
+ 	}
+ #	neighbor 35.9.68.246 {
+ #		descr "HE redundant peer 2"
+ #		announce self
+ #		local-address 10.0.0.8
+ #		ipsec esp ike
+ #	}
+ }
+ # filter out prefixes longer than 24 or shorter than 8 bits
+ deny from any
+ allow from any inet prefixlen 8 - 24
+ # do not accept a default route
+ deny from any prefix 0.0.0.0/0
+ # filter bogus networks
+ deny from any prefix 10.0.0.0/8 prefixlen >= 8
+ deny from any prefix 172.16.0.0/12 prefixlen >= 12
+ deny from any prefix 192.168.0.0/16 prefixlen >= 16
+ deny from any prefix 169.254.0.0/16 prefixlen >= 16
+ deny from any prefix 192.0.2.0/24 prefixlen >= 24
+ deny from any prefix 224.0.0.0/4 prefixlen >= 4
+ deny from any prefix 240.0.0.0/4 prefixlen >= 4
+!
+bgp enable
+!
+dhcp rules
+ option domain-name "yahoo.com";
+ option domain-name-servers 128.138.243.151, 199.249.19.1;
+ subnet 172.21.0.0 netmask 255.255.0.0 {
+ 	option routers 172.21.0.1;
+ 	range 172.21.0.10 172.21.2.255;
+ }
+ subnet 172.20.1.0 netmask 255.255.255.0 {
+ }
+ subnet 172.28.0.0 netmask 255.255.0.0 {
+ 	option routers 172.28.0.1;
+ 	range 172.28.0.10 172.28.2.255;
+ }
+ subnet 172.31.0.0 netmask 255.255.255.0 {
+ 	option routers 172.31.0.1;
+ 	range 172.31.0.32 172.31.0.96;
+ }
+ subnet 172.29.0.0 netmask 255.255.0.0 {
+ 	option routers 172.29.0.1;
+ 	range 172.29.0.10 172.29.2.255;
+ }
+ subnet 35.2.3.32 netmask 255.255.255.224 {
+ 	option routers 35.2.3.33;
+ 	range 35.2.3.34 35.2.3.62;
+ }
+ subnet 35.2.3.64 netmask 255.255.255.224 {
+ 	option routers 35.2.3.65;
+ 	range 35.2.3.66 35.2.3.94;
+ }
+ subnet 35.2.3.96 netmask 255.255.255.224 {
+ 	option routers 35.2.3.97;
+ 	range 35.2.3.98 35.2.3.126;
+ }
+!
+dhcp enable
+!
+snmp rules
+ listen on 172.20.1.1
+ read-only community prorororor
+ read-write community pqpqpqpqpq
+!
+snmp enable
+!
+ntp rules
+ servers us.pool.ntp.org
+!
+ntp enable
+!
+ftp-proxy enable
+!
+sshd rules
+ ListenAddress 35.9.68.250
+ Protocol 2
+ Subsystem sftp /usr/libexec/sftp-server
+!
+sshd enable
+!
