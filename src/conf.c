@@ -1,19 +1,3 @@
-/*
- * Copyright (c) 2002-2009 Chris Cappuccio <chris@nmedia.net>
- *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- */
-
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -701,7 +685,7 @@ int conf_dhcrelay(char *ifname, char *server, int serverlen)
 	int alen;
 
 	data = sl_init();
-	if ((alen = db_select_flag_x_data_ctl_rtable(data, "dhcrelay", ifname, 0))
+	if ((alen = db_select_flag_x_data_ctl_rtable(data, "dhcprelay", ifname, 0))
 	    > 0) {
 		strlcpy(server, data->sl_str[0], serverlen);
 		alen = strlen(data->sl_str[0]);
