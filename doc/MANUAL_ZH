@@ -29,35 +29,117 @@ Step 2. 编译nsh
   
   $tar zxvf nsh.tar.gz
   ...
-  $cd nsh
+  $cd nsh/src
   $make
   ...
 
 当编译完成后，会生成nsh二进制文件，将他复制到目录
-/user/local/bin/nsh
+/user/local/bin/nsh 或者 /bin/nsh
 
-Step 3. 复制相关配置文件
+Step 3. 复制保存配置文件
 
-# cp save-ro.sh /usr/local/bin/save.sh
-# cp save-rw.sh /usr/local/bin/save.sh
+如果/etc目录是只读的，/var/run是可读可写的，复制save-ro.sh脚本到/usr/local/bin目录下
+  $cp save-ro.sh /usr/local/bin/save.sh
 
-# cp /etc/pf.conf /var/run/pf.conf.0
-# cp /etc/dhcpd.conf /var/run/dhcpd.conf.0
-# cp /etc/ssh/sshd_config /var/run/sshd.conf.0
-# mv /etc/resolv.conf /var/run/resolv.conf.0
-# ln -s /var/run/resolv.conf.symlink /etc/resolv.conf
-# mv /etc/motd /var/run/motd.0
-# ln -s /var/run/motd.0 /etc/motd
-# nsh
-% NSH v1.0
-nsh/enable
-nsh(p)/pf enable
-nsh(p)/dhcp enable
-nsh(p)/sshd enable
-nsh(p)/dns local-control
-nsh/write
-% Configuration saved
-nsh/quit
+如果/etc 与 /var/run 都是可读可写，复制save-rw.sh到目录/usr/local/bin目录下
+  $cp save-rw.sh /usr/local/bin/save.sh
+
+Step 4. 创建一个初始化脚本
+  $./nsh
+  $write-config
+
+Step 5. 复制当前系统相关配置到脚本程序中
+  $cp /etc/pf.conf /var/run/pf.conf.0
+  $cp /etc/dhcpd.conf /var/run/dhcpd.conf.0
+  $cp /etc/ssh/sshd_config /var/run/sshd.conf.0
+  $mv /etc/resolv.conf /var/run/resolv.conf.0
+  $ln -s /var/run/resolv.conf.symlink /etc/resolv.conf
+  $mv /etc/motd /var/run/motd.0
+  $ln -s /var/run/motd.0 /etc/motd
+
+Step 6. 运行nsh程序，开启功能
+  $nsh
+   % NSH v0.1
+   nsh/enable
+   nsh(p)/pf enable
+   nsh(p)/dhcp enable
+   nsh(p)/sshd enable
+   nsh(p)/dns local-control
+   nsh/write
+    % Configuration saved
+   nsh/quit
+
+运行完后，可以编辑配置文件/etc/nshrc，删除相关注释信息等。
+
+Step 7. 关闭OpenBSD自动配置
+  echo sshd_flags=NO >>/etc/rc.conf.local
+  echo pf=NO >>/etc/rc.conf.local
+  echo inetd=NO >>/etc/rc.conf.local
+
+
+第三章 基本配置简介
+------------------
+
+配置模式: 一般模式
+  # ./nsh                                                                                                               
+   % 防火墙Shell程序 -- v1.0
+  firewall>
+  firewall>
+
+输入enable：进入特权模式
+  firewall>enable
+  firewall#
+
+切换模式配置密码：
+  firewall#enable secret firewall
+  firewall#disable
+  firewall>enable
+  password:
+  firewall#
+
+
+配置主机名：
+  #hostname firewall
+
+配置接口：
+  firewall#show interface   // 查看当前所有接口
+% lo0
+  Interface is up (last change 01:50:12), protocol is up
+  Interface type Loopback
+  Internet address ::1/128, fe80::1%lo0/64, 127.0.0.1/8
+  rdomain 0, MTU 32768 bytes
+  40 packets input, 2200 bytes, 0 errors, 0 drops
+  40 packets output, 2200 bytes, 0 errors, 0 unsupported
+  55 input, 55 output (average bytes/packet)
+% em0
+  Interface is up (last change 04:27:17), protocol is up
+  Interface type Ethernet (Broadcast), hardware address 00:0c:29:6b:b0:d7
+  Media type autoselect (1000baseT full-duplex,master), status active
+  Internet address 172.16.17.132/24
+  rdomain 0, MTU 1500 bytes (hardmtu 16110), Line Rate 1000 Mbps
+  24765 packets input, 2082535 bytes, 0 errors, 0 drops
+  14301 packets output, 2313608 bytes, 0 errors, 0 unsupported
+  84 input, 161 output (average bytes/packet)
+  0 collisions
+% enc0
+  Interface is down, protocol is down
+  Interface type IPsec Encapsulation
+  rdomain 0, MTU 0 bytes
+  0 packets input, 0 bytes, 0 errors, 0 drops
+  0 packets output, 0 bytes, 0 errors, 0 unsupported
+% pflog0
+  Interface is up (last change 04:32:25), protocol is up
+  Interface type Packet Filter Logging
+  rdomain 0, MTU 33136 bytes
+  0 packets input, 0 bytes, 0 errors, 0 drops
+  0 packets output, 0 bytes, 0 errors, 0 unsupported
+
+  
+
+
+配置ntp服务器
+  #
+
 
 
 
