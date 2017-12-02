@@ -111,7 +111,7 @@ quit(void)
  */
 
 Menu showlist[] = {
-	{ "hostname",	"Router hostname",	CMPL0 0, 0, 0, 0, show_hostname },
+	{ "hostname",	"Firewall hostname",	CMPL0 0, 0, 0, 0, show_hostname },
 	{ "interface",	"Interface config",	CMPL(i) 0, 0, 0, 1, show_int },
 	{ "route",	"IPv4 route table or route lookup", CMPL0 0, 0, 0, 1, pr_routes },
 	{ "route6",	"IPv6 route table or route lookup", CMPL0 0, 0, 0, 1, pr_routes6 },
