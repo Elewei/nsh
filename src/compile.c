@@ -1,3 +1,3 @@
-char compiled[] = "30-Nov-17 15:10";
+char compiled[] = "01-Dec-17 06:02";
 char compiledby[] = "root";
-char compilehost[] = "David.localdomain";
+char compilehost[] = "firewall";

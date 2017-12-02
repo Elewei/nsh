@@ -8,5 +8,4 @@ pf, ospfd, ospf6d, bgpd, ripd, ldpd, relayd, ipsecctl, iked, rtadvd,dvmrpd,
 sasyncd, dhcpd, snmpd, sshd, ntpd, ifstated, tftp-proxy, ftp-proxy,tftpd, 
 npppd, resolv.conf, inetd, smtpd, ldapd, ifstated
 
-Forked from https://github.com/yellowman/nsh
-解决与优化部分代码： github.com/elewei/nsh
+http://www.github.com/elewei/nsh
