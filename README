@@ -1,38 +1,12 @@
-nsh//网络配置Shell//Chris Cappuccio <chris@nmedia.net> version 1.0
+nsh//网络配置Shell//Zhang Qiwei <mzhangqiwei@163.com> version 0.1
 
-NSH is a CLI intended for OpenBSD-based network appliances. It replaces
-ifconfig, sysctl and route with its own simple command language, and
-encapsulates configuration for other daemons into one place, effectively
-replacing /etc/netstart and parts of /etc/rc for appliance-style usage.
+NSH是一个基础命令行的配置程序，基于OpenBSD系统。它提供将接口，路由，vlan，防火墙等配置
+存放于一个文件中。
 
 Daemons and services encapsulated by nsh:
-pf, 
-ospfd, 
-ospf6d, 
-bgpd, 
-ripd, 
-ldpd, 
-relayd, 
-ipsecctl, 
-iked, 
-rtadvd,
-dvmrpd, 
-sasyncd, 
-dhcpd, 
-snmpd, 
-sshd, 
-ntpd, 
-ifstated, 
-tftp-proxy, 
-ftp-proxy,
-tftpd, 
-npppd, 
-resolv.conf, 
-inetd, 
-smtpd, 
-ldapd, 
-ifstated
+pf, ospfd, ospf6d, bgpd, ripd, ldpd, relayd, ipsecctl, iked, rtadvd,dvmrpd, 
+sasyncd, dhcpd, snmpd, sshd, ntpd, ifstated, tftp-proxy, ftp-proxy,tftpd, 
+npppd, resolv.conf, inetd, smtpd, ldapd, ifstated
 
-See http://github.com/yellowman/nsh/ for current source code repository and
-see http://www.nmedia.net/nsh/ for example configurations and mailing
-list.
+Forked from https://github.com/yellowman/nsh
+解决与优化部分代码： github.com/elewei/nsh
