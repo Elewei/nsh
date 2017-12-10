@@ -1,33 +1,3 @@
-/* From: $OpenBSD: /usr/src/usr.bin/ftp/complete.c,v 1.19 2006/06/23 20:35:25 steven Exp $ */
-/*-
- * Copyright (c) 1997 The NetBSD Foundation, Inc.
- * All rights reserved.
- *
- * This code is derived from software contributed to The NetBSD Foundation
- * by Luke Mewburn.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS
- * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
-
 #include <ctype.h>
 #include <err.h>
 #include <dirent.h>
@@ -47,7 +17,6 @@
 #define ttyin stdin
 
 unsigned char complete(EditLine *, int, char **, size_t, char *);
-
 static int	     comparstr(const void *, const void *);
 static unsigned char complete_ambiguous(char *, int, StringList *, EditLine *);
 static unsigned char complete_command(char *, int, EditLine *, char **, int);
@@ -57,7 +26,6 @@ static unsigned char complete_ifname(char *, int, EditLine *);
 static unsigned char complete_args(struct ghs *, char *, int, EditLine *,
 				   char **, int, int);
 static void list_vertical(StringList *);
-
 unsigned char complt_c(EditLine *, int);
 unsigned char complt_i(EditLine *, int);
 unsigned char exit_i(EditLine *, int);
@@ -421,7 +389,7 @@ list_vertical(StringList *sl)
 }
 
 /*
- * this needs to be called before initedit()
+ * 初始化命令行历史记录，需在initedit()之前调用
  */
 void
 inithist()
@@ -449,6 +417,7 @@ endhist()
 	}
 }
 
+
 void
 initedit()
 {
@@ -467,6 +436,7 @@ initedit()
 		el_source(elc, NULL);	/* read ~/.editrc */
 		el_set(elc, EL_SIGNAL, 1);
 	}
+	
 	if (!eli) {
 		eli = el_init(__progname, stdin, stdout, stderr);
 		if (histi)

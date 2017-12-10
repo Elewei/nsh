@@ -81,7 +81,7 @@ main(int argc, char *argv[])
 
 	printf("%% 防火墙Shell程序 -- v%s\n", vers);
 
-	/* create temporal tables (if they aren't already there) */
+	/* 创建sqlite数据库表 */
 	if (db_create_table_rtables() < 0)
 		printf("%% database rtables creation failed\n");
 	if (db_create_table_flag_x("ctl") < 0)
@@ -100,46 +100,29 @@ main(int argc, char *argv[])
 		printf("%% database peerkey creation failed\n");
 
 	if (iflag) {
-		/*
-		 * Interpret config file and exit
-		 */
 		char *argv_demote[] = { "group", "carp", "carpdemote", "128" };
 		char *argv_restore[] = { "no", "group", "carp", "carpdemote", "128" };
 		priv = 1;
-
-		/*
-		 * Set carp group carpdemote to 128 during initialization
-		 */
 		group(nitems(argv_demote), argv_demote);
-
 		cmdrc(rc);
-
-		/*
-		 * Initialization over
-		 */
 		group(nitems(argv_restore), argv_restore);
-
 		exit(0);
 	}
 	if (cflag) {
-		/*
-		 * Interpret command file and exit
-		 */
 		priv = 1;
-
 		cmdrc(rc);
-
 		exit(0);
 	}
 
 	top = setjmp(toplevel) == 0;
 	if (top) {
-		(void)signal(SIGWINCH, setwinsize);
-		(void)signal(SIGINT, (sig_t)intr);
-		(void)setwinsize(0);
+		(void)signal(SIGWINCH, setwinsize);   // 窗口大小变化
+		(void)signal(SIGINT, (sig_t)intr);    // 收到一个交互提示信号，执行intr
+		(void)setwinsize(0);				  // 窗口大小默认
 	} else
 		putchar('\n');
 
+	/* 循环执行command */
 	for (;;) {
 		command();
 		top = 1;

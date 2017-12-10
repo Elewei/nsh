@@ -7,8 +7,8 @@
 #define nitems(_a)	(sizeof((_a)) / sizeof((_a)[0])) /* sys/param.h */
 
 struct rtdump {
-	char *buf;	/* start of routing table */
-	char *lim;	/* end of routing table */
+	char *buf;	/* 路由表开始 */
+	char *lim;	/* 路由表结束 */
 };
 
 extern char *__progname;	/* duh */
@@ -31,10 +31,10 @@ extern char hname[HSIZE];	/* prefix name to mode handler */
 extern HistEvent ev;		/* ev */
 #endif
 
-/* defaults */
-#define	DEFAULT_MTU	1500		/* net.inet.ip.defmtu */
-#define	DEFAULT_TTL	64		    /* net.inet.ip.defttl */
-#define DEFAULT_MTTL	255		/* net.mpls.ttl */
+/* 默认 */
+#define	DEFAULT_MTU	1500		    /* net.inet.ip.defmtu */
+#define	DEFAULT_TTL	64		        /* net.inet.ip.defttl */
+#define DEFAULT_MTTL	255		    /* net.mpls.ttl */
 #define ESP_UDPENCAP_PORT 4500		/* net.inet.esp.udpencap_port */
 
 /* nopt.c */
@@ -153,7 +153,7 @@ extern char metricnames[];
 #define SMTPCONF_TEMP 	"/var/run/smtpd.conf"
 #define LDAPCONF_TEMP	"/var/run/ldapd.conf"
 #define IFSTATECONF_TEMP "/var/run/ifstated.conf"
-#define MOTD_TEMP        "/var/run/motd"
+#define MOTD_TEMP       "/var/run/motd"
 
 /* argument list replacement */
 #define OPT     (void *)1
@@ -188,9 +188,11 @@ struct ctl {
 	int flag_x;
 	int type;
 };
+
 #define	T_HANDLER	1
 #define T_HANDLER_FILL1	2
 #define	T_EXEC		3
+
 struct daemons {
         char *name;
 	char *propername;
@@ -261,15 +263,15 @@ extern size_t cursor_argc;
 extern size_t cursor_argo;
 
 typedef struct cmd {
-	char *name;		/* command name */
-	char *help;		/* help string (NULL for no help) */
+	char *name;			/* command name */
+	char *help;			/* help string (NULL for no help) */
 	char *complete;		/* context sensitive completion list */
 	char **table;		/* next table for context completion */
-	int stlen;		/* struct length (for rows in next table) */
+	int stlen;			/* struct length (for rows in next table) */
 	int (*handler) ();	/* routine which executes command */
 	int needpriv;		/* Do we need privilege to execute? */   
-	int nocmd;		/* Can we specify 'no ...command...'? */
-	int modh;		/* Is it a mode handler for cmdrc()? */
+	int nocmd;			/* Can we specify 'no ...command...'? */
+	int modh;			/* Is it a mode handler for cmdrc()? */
 } Command;
  
 typedef struct menu {
@@ -377,6 +379,7 @@ int parse_ipv6(char *, struct in6_addr *);
 #define ROUNDMBPS(bps) ((float)bps == ((bps / 1000 / 1000) * 1000 * 1000))
 #define ROUNDKBPS(bps) ((float)bps == ((bps / 1000) * 1000))
 #define ROUNDKBYTES(bytes) ((float)bytes == ((bytes / 1024) * 1024))
+
 void imr_init(char *);
 int is_valid_ifname(char *);
 int show_int(int, char **);
@@ -523,12 +526,13 @@ char *format_time(time_t);
 char *format_k(uint64_t amt);
 
 /* sqlite3.c */
-#define SQ3DBFILE "/var/run/nsh.db"
+#define SQ3DBFILE  "/var/run/nsh.db"
 #define DB_X_ENABLE 1
 #define DB_X_DISABLE 2
 #define DB_X_LOCAL 3
 #define DB_X_OTHER 4
 #define DB_X_REMOVE 5
+
 int db_create_table_rtables(void);
 int db_create_table_flag_x(char *);
 int db_insert_flag_x(char *, char *, int, int, char *);
@@ -536,6 +540,7 @@ int db_insert_rtables(int, char *);
 int db_delete_rtables_rtable(int);
 int db_delete_flag_x_ctl(char *, char *);
 int db_delete_flag_x_ctl_data(char *, char *, char *);
+
 #ifdef _STRINGLIST_H
 int db_select_flag_x_ctl_data(StringList *, char *, char *, char *);
 int db_select_flag_x_ctl(StringList *, char *, char *);
@@ -546,6 +551,7 @@ int db_select_name_rtable(StringList *, int);
 int db_select_flag_x_ctl_rtable(StringList *, char *, int);
 int db_select_flag_x_data_ctl_rtable(StringList *, char *, char *, int);
 #endif
+
 int db_select_flag_x_dbflag_rtable(char *, char *, int);
 
 /* pflow.c */

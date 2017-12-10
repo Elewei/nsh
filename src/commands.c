@@ -151,7 +151,7 @@ quit(void)
 }
 
 /*
- * Data structures and routines for the "show" command.
+ * show 命令数据结构
  */
 
 Menu showlist[] = {
@@ -222,7 +222,7 @@ showcmd(int argc, char **argv)
 static int
 show_help(int argc, char **argv)
 {
-	Menu *s; /* pointer to current command */
+	Menu *s;     /* pointer to current command */
 	u_int z = 0;
 
 	printf("%% Commands may be abbreviated.\n");
@@ -841,7 +841,7 @@ static char
 	tftpproxyhelp[] ="tftp-proxy server control",
 	tftphelp[] =	"TFTP server control",
 	dnshelp[] =	"DNS rule control",
-        motdhelp[] =    "Message of-the-day",
+    motdhelp[] =    "Message of-the-day",
 	inethelp[] =	"Inet super-server control",
 	bridgehelp[] =	"Modify bridge parameters",
 	showhelp[] =	"Show system information",
@@ -873,8 +873,8 @@ static char
 /*
  * Primary commands, will be included in help output
  */
-
 #define ssctl sizeof(struct ctl)
+
 Command cmdtab[] = {
 	{ "hostname",	hostnamehelp,	CMPL0 0, 0, hostname, 	1, 0, 0 },
 	{ "interface",	interfacehelp,	CMPL(i) 0, 0, interface, 1, 1, 1 },
@@ -920,13 +920,13 @@ Command cmdtab[] = {
 	{ "tftp-proxy",	tftpproxyhelp,	CMPL(t) (char **)ctl_tftpproxy, ssctl, ctlhandler, 1, 0, 1 },
 	{ "tftp",	tftphelp,	CMPL(t) (char **)ctl_tftp, ssctl, ctlhandler,	1, 0, 1 },
 	{ "dns",	dnshelp,	CMPL(t) (char **)ctl_dns, ssctl, ctlhandler,	1, 0, 1 },
-        { "motd",       motdhelp,       CMPL(t) (char **)ctl_motd, ssctl, ctlhandler,    1, 0, 1 },
+    { "motd",       motdhelp,       CMPL(t) (char **)ctl_motd, ssctl, ctlhandler,    1, 0, 1 },
 	{ "inet",	inethelp,	CMPL(t) (char **)ctl_inet, ssctl, ctlhandler,	1, 0, 1 },
 	{ "ping",	pinghelp,	CMPL0 0, 0, ping,	0, 0, 0 },
 	{ "ping6",	ping6help,	CMPL0 0, 0, ping6,	0, 0, 0 },
-	{ "traceroute", tracerthelp,	CMPL0 0, 0, traceroute,	0, 0, 0 },
+	{ "traceroute", tracerthelp, CMPL0 0, 0, traceroute,	0, 0, 0 },
 	{ "traceroute6", tracert6help,  CMPL0 0, 0, traceroute6, 0, 0, 0 },
-	{ "ssh",	sshhelp,	CMPL0 0, 0, ssh,	0, 0, 0 },
+	{ "ssh",	sshhelp, CMPL0 0, 0, ssh,	0, 0, 0 },
 	{ "telnet",	telnethelp,	CMPL0 0, 0, telnet,	0, 0, 0 },
 	{ "reboot",	nreboothelp,	CMPL0 0, 0, nreboot,	1, 0, 0 },
 	{ "halt",	halthelp,	CMPL0 0, 0, halt,	1, 0, 0 },
@@ -944,7 +944,6 @@ Command cmdtab[] = {
 /*
  * These commands escape ambiguous check and help listings
  */
-
 static Command  cmdtab2[] = {
 	{ "config",	0,		CMPL0 0, 0, notvalid,	0, 0, 0 },
 	{ 0,		0,		CMPL0 0, 0, 0,		0, 0, 0 }
@@ -1023,6 +1022,8 @@ makeargv()
 	}
 }
 
+
+/* NSH 主要执行函数 */
 void
 command()
 {
@@ -1068,35 +1069,41 @@ command()
 		if (line[0] == 0)
 			break;
 		makeargv();
+		
 		if (margv[0] == 0) {
 			break;
 		}
+		
 		if (NO_ARG(margv[0]))
 			c = getcmd(margv[1]);
 		else
 			c = getcmd(margv[0]);
+		
 		if (Ambiguous(c)) {
 			printf("%% Ambiguous command\n");
 			continue;
 		}
+
 		if (c == 0) {
 			int val = 1;
-
 			if (editing)                                
 				val = el_burrito(elc, margc, margv);
 			if (val)
 				printf("%% Invalid command\n");
 			continue;
 		}
+
 		if (NO_ARG(margv[0]) && ! c->nocmd) {
 			printf("%% Invalid command: %s %s\n", margv[0],
 			    margv[1]);
 			continue;
 		}
+
 		if (c->needpriv != 0 && priv != 1) {
 			printf("%% Privilege required\n");
 			continue;
 		}
+
 		if (c->modh)
 			strlcpy(hname, c->name, HSIZE);	
 		if ((*c->handler) (margc, margv, 0)) {
@@ -1106,7 +1113,7 @@ command()
 }
 
 /*
- * Help command.
+ * help 命令.
  */
 static int
 help(int argc, char **argv)
@@ -1116,8 +1123,8 @@ help(int argc, char **argv)
 	if (argc == 1) { 
 		u_int z = 0;
 
-		printf("%% Commands may be abbreviated.\n");
-		printf("%% Commands are:\n\n");
+		printf("%% 命令可以简写.\n");
+		printf("%% 命令如下:\n\n");
 
 		for (c = cmdtab; c->name; c++)
 			if (((c->needpriv && priv) || !c->needpriv)
@@ -1559,9 +1566,7 @@ disable(void)
 int
 notvalid(void)
 {
-	printf("%% The command you entered is not necessary with this"
-	    " software.\n");
-
+	printf("%% 还未实现config模式！！！\n");
 	return(0);
 }
 
@@ -1810,24 +1815,24 @@ p_argv(int argc, char **argv)
 {
 	int z;
 
-		for (z = 0; z < argc; z++)
-			printf("%s%s", z ? " " : "[", argv[z]);
-		printf("]");
-		return;
-	}
+	for (z = 0; z < argc; z++)
+		printf("%s%s", z ? " " : "[", argv[z]);
+	printf("]");
+	return;
+}
 
-	/*
-	 * for the purpose of interface handler routines, 1 here is failure and
-	 * 0 is success
-	 */
-	int
-	el_burrito(EditLine *el, int argc, char **argv)
-	{
-		char *colon;
-		int val;
+/*
+ * for the purpose of interface handler routines, 1 here is failure and
+ * 0 is success
+ */
+int
+el_burrito(EditLine *el, int argc, char **argv)
+{
+	char *colon;
+	int val;
 
-		if (!editing)	/* Nothing to parse, fail */
-			return(1);
+	if (!editing)	/* Nothing to parse, fail */
+		return(1);
 
 		/*
 		 * el_parse will always return a non-error status if someone specifies
