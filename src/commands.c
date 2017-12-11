@@ -1,47 +1,3 @@
-/*
- * Copyright (c) 2002-2008 Chris Cappuccio <chris@nmedia.net>
- *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- */
-/*
- * Copyright (c) 1988, 1990, 1993
- *      The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -578,8 +534,8 @@ struct intlist Bridgelist[] = {
 	{ "static",	"Static bridge address entry",		CMPL0 0, 0, brstatic },
 	{ "ifpriority",	"Spanning priority of a member on an 802.1D bridge",	CMPL0 0, 0, brpri },
 	{ "ifcost",	"Spanning tree path cost of a member on 802.1D bridge", CMPL0 0, 0, brpri },
-        { "link",	"Set link level options",		CMPL0 0, 0, intlink },
-        { "shutdown",	"Shutdown bridge",			CMPL0 0, 0, intflags },
+    { "link",	"Set link level options",		CMPL0 0, 0, intlink },
+    { "shutdown",	"Shutdown bridge",			CMPL0 0, 0, intflags },
 
 /* Help commands */
 	{ "?",		"Options",				CMPL0 0, 0, int_help },
@@ -966,15 +922,15 @@ makeargv()
 	char	**argp = margv;
 
 	margc = 0;
-	cp = line;
-	if (*cp == '!') {	/* Special case shell escape */
+	cp = line;	
+	if (*cp == '!') {	/* 执行shell脚本 */
 		/* save for shell command */
 		strlcpy(saveline, line, sizeof(saveline));
-
 		*argp++ = "!";	/* No room in string to get this */
 		margc++;
 		cp++;
 	}
+
 	while ((c = *cp)) {
 		int inquote = 0;
 		while (isspace(c))
@@ -1515,9 +1471,9 @@ cmdargs(char *cmd, char *arg[])
 
 	sigint = signal(SIGINT, SIG_IGN);
 	sigquit = signal(SIGQUIT, SIG_IGN);
-	sigchld = signal(SIGCHLD, SIG_DFL);
+	sigchld = signal(SIGCHLD, SIG_DFL);  // 中断信号
 
-	switch(child = fork()) {
+	switch(child = fork()) {             // fork进程
 		case -1:
 			printf("%% fork failed: %s\n", strerror(errno));
 			break;
@@ -1640,7 +1596,7 @@ gen_help(char **x, char *cmdprefix, char *descrsuffix, int szstruct)
 	struct ghs *ghs;
 	int z = 0;
 
-	printf("%% Arguments may be abbreviated\n\n");
+	printf("%% 命令可以简写\n\n");
 
 	while (*y != 0) {
 		if (strlen(*y) > z)

@@ -25,9 +25,9 @@ void usage(void);
 
 jmp_buf toplevel;
 
-char *vers = "1.0";
-int bridge = 0;		/* bridge mode for interface() */
-int verbose = 0;	/* verbose mode */
+char *vers = "0.1";
+int bridge = 0;		/* 桥接模式 interface() */
+int verbose = 0;	/* DEBUG 模式 */
 int priv = 0, cli_rtable = 0;
 int editing = 1;
 pid_t pid;
