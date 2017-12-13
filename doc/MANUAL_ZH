@@ -71,10 +71,19 @@ Step 6. 运行nsh程序，开启功能
 
 运行完后，可以编辑配置文件/etc/nshrc，删除相关注释信息等。
 
-Step 7. 关闭OpenBSD自动配置
+Step 7. 关闭和移除OpenBSD系统启动自动化配置
+  
   echo sshd_flags=NO >>/etc/rc.conf.local
   echo pf=NO >>/etc/rc.conf.local
   echo inetd=NO >>/etc/rc.conf.local
+
+使用nsh程序来控制相关进程
+  
+  在/etc/rc.conf.local进程中，添加如下代码来执行
+  nsh -i /etc/nshrc | tee /var/run/nsh.out
+  nsh -vi /etc/nshrc | tee /var/run/nsh.out
+
+现在当系统重启后，会自动将配置文件导入到内核中。
 
 
 第三章 基本配置简介
@@ -135,8 +144,6 @@ Step 7. 关闭OpenBSD自动配置
   0 packets output, 0 bytes, 0 errors, 0 unsupported
 
   
-
-
 配置ntp服务器
   #
 

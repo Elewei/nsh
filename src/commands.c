@@ -28,8 +28,8 @@ char line[1024];
 char saveline[1024];
 int  margc;
 char hname[HSIZE];
-static char hbuf[MAXHOSTNAMELEN];	/* host name */
-static char ifname[IFNAMSIZ];		/* interface name */
+static char hbuf[MAXHOSTNAMELEN];	/* 主机名 */
+static char ifname[IFNAMSIZ];		/* 接口名称 */
 struct intlist *whichlist;
 
 #define NARGS  sizeof(line)/2		/* max arguments in char line[] */
