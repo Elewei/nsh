@@ -101,7 +101,7 @@ void sigalarm(int blahfart)
 int
 quit(void)
 {
-	printf("%% Session terminated.\n");
+	printf("%% exit nsh.\n");
 	exit(0);
 	return 0;
 }

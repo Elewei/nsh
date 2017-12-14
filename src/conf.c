@@ -125,7 +125,7 @@ conf(FILE *output)
 	fprintf(output, ": Serial Number: XXXX-XXXX\n");
 	fprintf(output, ": Hardware: OpenBSD/amd64, 512MB RAM, CPU Intel 2394Hz, 1CPU(4 Cores)\n");
 	fprintf(output, ": \n");
-	fprintf(output, "!\n");
+	fprintf(output, "\n");
 
 	gethostname (hostbuf, sizeof(hostbuf));
 	fprintf(output, "hostname %s\n", hostbuf);
