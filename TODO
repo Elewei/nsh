@@ -1,12 +1,8 @@
 1. 命令可以使用正则匹配  例如： show run | include crypto
-
 2. 添加AAA认证
-
 3. SSH 可以自动生成密钥
-
 4. 配置改成命令行编辑模式
-
-5. 配置脚本实现MIB库
+5. 配置脚本实现tffp同步
 
 6. 实现telnet
 
