@@ -25,9 +25,9 @@ void usage(void);
 
 jmp_buf toplevel;
 
-char *vers = "0.1";
-int bridge = 0;		/* 桥接模式 interface() */
-int verbose = 0;	/* DEBUG 模式 */
+char *vers = "0.2";
+int bridge = 0;		      /* 桥接模式 interface() */
+int verbose = 0;	      /* DEBUG 模式 */
 int priv = 0, cli_rtable = 0;
 int editing = 1;
 pid_t pid;
@@ -114,13 +114,13 @@ main(int argc, char *argv[])
 		exit(0);
 	}
 
-	top = setjmp(toplevel) == 0;
+	top = setjmp(toplevel) == 0;   // setjmp 第一次保存当前AR到toplevel中，返回0	
 	if (top) {
 		(void)signal(SIGWINCH, setwinsize);   // 窗口大小变化
 		(void)signal(SIGINT, (sig_t)intr);    // 收到一个交互提示信号，执行intr
 		(void)setwinsize(0);				  // 窗口大小默认
 	} else
-		putchar('\n');
+		putchar('\n');                   
 
 	/* 循环执行command */
 	for (;;) {

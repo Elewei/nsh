@@ -153,7 +153,7 @@ extern char metricnames[];
 #define SMTPCONF_TEMP 	"/var/run/smtpd.conf"
 #define LDAPCONF_TEMP	"/var/run/ldapd.conf"
 #define IFSTATECONF_TEMP "/var/run/ifstated.conf"
-#define MOTD_TEMP       "/var/run/motd"
+#define MOTD_TEMP        "/var/run/motd"
 
 /* argument list replacement */
 #define OPT     (void *)1
@@ -288,9 +288,9 @@ typedef struct menu {
 struct intlist {
 	char *name;             /* How user refers to it (case independent) */
 	char *help;             /* Help information (0 ==> no help) */
-	char *complete;		/* context sensitive completion list */
-	char **table;		/* next table for context completion */
-	int stlen;		/* struct length (for rows in next table) */
+	char *complete;		    /* context sensitive completion list */
+	char **table;		    /* next table for context completion */
+	int stlen;		        /* struct length (for rows in next table) */
 	int (*handler)();       /* Routine to perform (for special ops) */
 	int bridge;             /* 0 == Interface, 1 == Bridge, 2 == Both */
 };

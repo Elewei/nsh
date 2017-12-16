@@ -915,15 +915,20 @@ getcmd(char *name)
 	return (Command *) genget(name, (char **) cmdtab2, sizeof(Command));
 }
 
+/*
+ * 去除代码中空格，双引号
+ *
+ */
 void 
 makeargv()
 {
 	char	*cp, *cp2, *base, c;
 	char	**argp = margv;
 
-	margc = 0;
-	cp = line;	
-	if (*cp == '!') {	/* 执行shell脚本 */
+	margc = 0;          // 整形变量margc 初始化为0
+	cp = line;	        // 指针数组变量指向line数组
+	
+	if (*cp == '!') {	/* 执行shell脚本 忽略! */
 		/* save for shell command */
 		strlcpy(saveline, line, sizeof(saveline));
 		*argp++ = "!";	/* No room in string to get this */
@@ -931,15 +936,19 @@ makeargv()
 		cp++;
 	}
 
-	while ((c = *cp)) {
+	while ((c = *cp)) {     // c 赋值为单个字符
 		int inquote = 0;
-		while (isspace(c))
+		
+		while (isspace(c))  // 如果是空格，后移
 			c = *++cp;
-		if (c == '\0')
+		
+		if (c == '\0')      // 如果字符串结构符
 			break;
-		*argp++ = cp;
+		
+		*argp++ = cp;       
 		cursor_argc = margc += 1;
 		base = cp;
+		
 		for (cursor_argo = 0, cp2 = cp; c != '\0';
 		    cursor_argo = (cp + 1) - base, c = *++cp) {
 			if (inquote) {
@@ -987,8 +996,8 @@ command()
 	u_int num;
 
 	if (editing) {
-		inithist();
-		initedit();
+		inithist();     // 初始化历史记录的值
+		initedit();     // 初始化编辑器
 	}
 
 	for (;;) {
@@ -1014,7 +1023,7 @@ command()
 					break;
 			}
 			if (num >= sizeof(line)) {
-				printf("%% Input exceeds permitted length\n");
+				printf("%% 输入超界！\n");
 				break;
 			}
 			memcpy(line, buf, (size_t)num);
@@ -1024,6 +1033,7 @@ command()
 
 		if (line[0] == 0)
 			break;
+		
 		makeargv();
 		
 		if (margv[0] == 0) {

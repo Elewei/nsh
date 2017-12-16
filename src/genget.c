@@ -46,17 +46,18 @@ genget(char *name, char **table, int stlen)
     int n;
 
     if (name == 0)
-	return 0;
+	   return 0;
 
     found = 0;
     for (c = table; *c != 0; c = (char **)((char *)c + stlen)) {
-	if ((n = isprefix(name, *c)) == 0)
-	    continue;
-	if (n < 0)		/* exact match */
-	    return(c);
-	if (found)
-	    return(&ambiguous);
-	found = c;
+	   if ((n = isprefix(name, *c)) == 0)
+	       continue;
+	   if (n < 0)		/* exact match */
+	       return(c);
+	   if (found)
+	       return(&ambiguous);
+	   
+       found = c;
     }
     return(found);
 }
