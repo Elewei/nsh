@@ -263,7 +263,7 @@ complete(EditLine *el, int ch, char **table, size_t stlen, char *arg)
 	int celems, dolist;
 	size_t len;
 
-	ch = ch;		/* not used */
+	// ch = ch;		/* not used */
 	lf = el_line(el);
 	len = lf->lastchar - lf->buffer;
 	if (len >= sizeof(line))

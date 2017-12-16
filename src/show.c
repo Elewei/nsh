@@ -42,6 +42,7 @@ struct bits {
 	int	b_mask;
 	char	b_val;
 };
+
 static const struct bits bits[] = {
 	{ RTF_UP,	'U' },
 	{ RTF_GATEWAY,	'G' },
@@ -86,7 +87,7 @@ pr_flags(int af)
 }
 
 /*
- * Print routing tables.
+ * 打印路由表.
  */
 void
 p_rttables(int af, u_int tableid, int flags)
@@ -137,6 +138,7 @@ p_rttables(int af, u_int tableid, int flags)
 			    strerror(errno));
 		return;
 	}
+	
 	if (needed > 0) {
 		if ((buf = malloc(needed)) == 0) {
 			printf("%% p_rttables: spd malloc: %s\n",

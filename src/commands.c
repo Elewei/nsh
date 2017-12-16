@@ -43,8 +43,8 @@ static int	quit(void);
 static int	disable(void);
 static int	doverbose(int, char**);
 static int	doediting(int, char**);
-int		rtable(int, char**);
-int		group(int, char**);
+	   int	rtable(int, char**);
+	   int	group(int, char**);
 static int	nsh_setrtable(int);
 static int	pr_routes(int, char **);
 static int	pr_routes6(int, char **);
@@ -410,7 +410,7 @@ flushcmd(int argc, char **argv)
 static int
 flush_line(char *line)
 {
-	char *argv[] = { PKILL, "-9", "-t", line, '\0' };
+	char *argv[] = { PKILL, "-9", "-t", line, 0 };
 	cmdargs(PKILL, argv);
 	return (1);
 }
@@ -2011,13 +2011,13 @@ el_burrito(EditLine *el, int argc, char **argv)
 		return 0;
 	}
 
-	int
-	pr_sadb(int argc, char **argv)
-	{
-		p_rttables(PF_KEY, 0, 0);
-
-		return 0;
-	}
+/* Secuirty Association Database */
+int
+pr_sadb(int argc, char **argv)
+{
+	p_rttables(PF_KEY, 0, 0);
+	return 0;
+}
 
 	int
 	pr_kernel(int argc, char **argv)

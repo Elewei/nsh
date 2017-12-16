@@ -12,17 +12,17 @@ struct rtdump {
 };
 
 extern char *__progname;	/* duh */
-extern char *vers;		    /* the version of nsh */
-extern char saveline[1024];	/* command line */
-extern char line[1024];		/* command line for makeargv() */
-extern int  margc;		/* makeargv() arg count */
+extern char *vers;		    /* nsh版本号 */
+extern char saveline[1024];	/* 命令行 */
+extern char line[1024];		/* 命令行 makeargv() */
+extern int  margc;		    /* makeargv() arg count */
 extern char *margv[];		/* makeargv() args */
-extern int verbose;		/* is verbose mode on? */
-extern int editing;		/* is command line editing mode on? */
-extern int bridge;		/* are we in bridge mode (or interface mode?) */
-extern int priv;		/* privileged mode or not? */
-extern pid_t pid;		/* process id of nsh */
-extern int cli_rtable;		/* environment rtable */
+extern int verbose;		    /* 是否开启verbose模式? */
+extern int editing;		    /* 是否开启命令行编辑模式? */
+extern int bridge;			/* 是否进入桥模式 (or interface mode?) */
+extern int priv;			/* 权限等级? */
+extern pid_t pid;			/* nsh 进程号 */
+extern int cli_rtable;		/* rtable 环境 */
 
 #define HSIZE	64
 extern char hname[HSIZE];	/* prefix name to mode handler */
@@ -263,35 +263,35 @@ extern size_t cursor_argc;
 extern size_t cursor_argo;
 
 typedef struct cmd {
-	char *name;			/* command name */
-	char *help;			/* help string (NULL for no help) */
-	char *complete;		/* context sensitive completion list */
-	char **table;		/* next table for context completion */
-	int stlen;			/* struct length (for rows in next table) */
-	int (*handler) ();	/* routine which executes command */
-	int needpriv;		/* Do we need privilege to execute? */   
-	int nocmd;			/* Can we specify 'no ...command...'? */
-	int modh;			/* Is it a mode handler for cmdrc()? */
+	char *name;			/* 名称 */
+	char *help;			/* 帮助信息 (NULL for no help) */
+	char *complete;		/* 完整命令行列表 */
+	char **table;		/* 下一张表 */
+	int stlen;			/* 结构大小 (for rows in next table) */
+	int (*handler) ();	/* 执行函数 */
+	int needpriv;		/* 是否需要权限 */   
+	int nocmd;			/* 是否可以删除 'no ...command...'? */
+	int modh;			/* 是否是 cmdrc() 监听*/
 } Command;
  
 typedef struct menu {
-	char *name;		/* How user refers to it (case independent) */
-	char *help;		/* Help information (0 ==> no help) */
-	char *complete;		/* context sensitive completion list */
-	char **table;		/* next table for context completion */
-	int stlen;		/* struct length (for rows in next table) */
-	int minarg;		/* Minimum number of arguments */
-	int maxarg;		/* Maximum number of arguments */
-	int (*handler)();	/* Routine to perform (for special ops) */
+	char *name;			/* 名称 */
+	char *help;			/* 帮助信息 (NULL ==> 无帮助) */
+	char *complete;		/* 完整命令 */
+	char **table;		/* 下一张表 */
+	int stlen;			/* struct length (for rows in next table) */
+	int minarg;			/* 最小参数个数 */
+	int maxarg;			/* 最大参数个数 */
+	int (*handler)();	/* 执行函数流程 (for special ops) */
 } Menu;
 
 struct intlist {
-	char *name;             /* How user refers to it (case independent) */
-	char *help;             /* Help information (0 ==> no help) */
-	char *complete;		    /* context sensitive completion list */
-	char **table;		    /* next table for context completion */
-	int stlen;		        /* struct length (for rows in next table) */
-	int (*handler)();       /* Routine to perform (for special ops) */
+	char *name;             /* 名称  */
+	char *help;             /* 帮助信息 (0 ==> no help) */
+	char *complete;		    /* 完整命令 */
+	char **table;		    /* 下一张表 */
+	int stlen;		        /* 结构长度 (for rows in next table) */
+	int (*handler)();       /* 执行函数 (for special ops) */
 	int bridge;             /* 0 == Interface, 1 == Bridge, 2 == Both */
 };
 
