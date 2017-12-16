@@ -670,7 +670,7 @@ call_editor(char *name, char **args, char *z)
 	if ((editor = getenv("EDITOR")) == NULL || *editor == '\0')
 		editor = DEFAULT_EDITOR;
 	if ((fd = acq_lock(tmpfile)) > 0) {
-		char *argv[] = { editor, tmpfile, '\0' };
+		char *argv[] = { editor, tmpfile, 0 };
 		cmdargs(editor, argv);
 		chmod(tmpfile, daemons->mode);
 		if (args != NULL)

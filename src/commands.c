@@ -2143,7 +2143,7 @@ step_optreq(char **xargs, char **args, int argc, char **argv, int skip)
 				printf("%% Missing required argument\n");
 				return NULL;
 			} else {
-				args[i] = '\0';
+				args[i] = 0;
 				break;
 			}
 		} else {
