@@ -1694,7 +1694,7 @@ cmdrc(char rcname[FILENAME_MAX])
 		if (line[0] == ' ' && line[1] == '!' && savec && savec->modh == 2)
 			continue;
 		if (line[0] == ' ')
-			strlcpy(saveline, line, sizeof(line));
+			strlcpy(saveline, line, sizeof(saveline));
 		makeargv();
 		if (margv[0] == 0)
 			continue;
