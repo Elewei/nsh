@@ -1647,7 +1647,7 @@ flush_pf(char *arg)
 	}
 
 	{
-		char *argv[] = { x->cmd, x->arg, '\0' };
+		char *argv[] = { x->cmd, x->arg, 0 };
 		cmdargs(x->cmd, argv);
 	}
 
@@ -1850,7 +1850,7 @@ el_burrito(EditLine *el, int argc, char **argv)
 	int
 	wr_startup(void)
 	{
-		char *argv[] = { SAVESCRIPT, NSHRC_TEMP, '\0' };
+		char *argv[] = { SAVESCRIPT, NSHRC_TEMP, 0 };
 		
 		if (wr_conf(NSHRC_TEMP))
 			printf("%% Saving configuration\n");
@@ -2046,7 +2046,7 @@ pr_sadb(int argc, char **argv)
 void
 pf_stats(void)
 {
-	char *argv[] = { PFCTL, "-sinfo", '\0' };
+	char *argv[] = { PFCTL, "-sinfo", 0 };
 
 	printf("%% pf statistics:\n");
 
@@ -2059,7 +2059,7 @@ pr_prot1(int argc, char **argv)
 {
 	struct prot1 *x;
 	struct prot *prot;
-	char *args[NOPTFILL] = { NULL, NULL, NULL, NULL, NULL, NULL, '\0' };
+	char *args[NOPTFILL] = { NULL, NULL, NULL, NULL, NULL, NULL, 0 };
 	char **fillargs;
 	char prefix[64];
 
@@ -2124,7 +2124,7 @@ step_optreq(char **xargs, char **args, int argc, char **argv, int skip)
 	/* copy xargs to args, replace OPT/REQ args with argv past skip */
 	for (i = 0; i < NOPTFILL - 2; i++) {
 		if (xargs[i] == NULL) {
-			args[i] = '\0';
+			args[i] = 0;
 			if (i > 1)
 			/*
 			 * all **args passed must have at least two arguments

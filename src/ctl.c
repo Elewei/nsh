@@ -95,7 +95,7 @@ struct ctl ctl_motd[] = {
 };
 
 /* PF, pfctl */
-char *ctl_pf_test[] = { PFCTL, "-nf", REQTEMP, '\0' };
+char *ctl_pf_test[] = { PFCTL, "-nf", REQTEMP, 0 };
 struct ctl ctl_pf[] = {
 	{ "enable",	"enable service",
 	    { PFCTL, "-e", NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -110,7 +110,7 @@ struct ctl ctl_pf[] = {
 };
 
 /* ospfd, ospfctl */
-char *ctl_ospf_test[] = { OSPFD, "-nf", REQTEMP, '\0' };
+char *ctl_ospf_test[] = { OSPFD, "-nf", REQTEMP, 0 };
 struct ctl ctl_ospf[] = {
 	{ "enable",     "enable service",
 	    { OSPFD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -129,7 +129,7 @@ struct ctl ctl_ospf[] = {
 };
 
 /* ospf6d, ospf6ctl */
-char *ctl_ospf6_test[] = { OSPF6D, "-nf", REQTEMP, '\0' };
+char *ctl_ospf6_test[] = { OSPF6D, "-nf", REQTEMP, 0 };
 struct ctl ctl_ospf6[] = {
 	{ "enable",     "enable service",
 	    { OSPF6D, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -148,7 +148,7 @@ struct ctl ctl_ospf6[] = {
 };
 
 /* eigrpd, eigrpctl */
-char *ctl_eigrp_test[] = { EIGRPD, "-nf", REQTEMP, '\0' };
+char *ctl_eigrp_test[] = { EIGRPD, "-nf", REQTEMP, 0 };
 struct ctl ctl_eigrp[] = {
 	{ "enable",	"enable service",
 	    { EIGRPD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -167,7 +167,7 @@ struct ctl ctl_eigrp[] = {
 };
 
 /* bgpd, bgpctl */
-char *ctl_bgp_test[] = { BGPD, "-nf", REQTEMP, NULL, '\0' };
+char *ctl_bgp_test[] = { BGPD, "-nf", REQTEMP, NULL, 0 };
 struct ctl ctl_bgp[] = {
 	{ "enable",     "enable service",
 	    { BGPD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -190,7 +190,7 @@ struct ctl ctl_bgp[] = {
 };
 
 /* ripd, ripctl */
-char *ctl_rip_test[] = { RIPD, "-nf", REQTEMP, '\0' };
+char *ctl_rip_test[] = { RIPD, "-nf", REQTEMP, 0 };
 struct ctl ctl_rip[] = {
 	{ "enable",     "enable service",
 	    { RIPD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -207,7 +207,7 @@ struct ctl ctl_rip[] = {
 };
 
 /* ldpd, ldpctl */
-char *ctl_ldp_test[] = { LDPD, "-nf", REQTEMP, '\0' };
+char *ctl_ldp_test[] = { LDPD, "-nf", REQTEMP, 0 };
 struct ctl ctl_ldp[] = {
 	{ "enable",	"enable service",
 	   { LDPD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -224,7 +224,7 @@ struct ctl ctl_ldp[] = {
 };
 
 /* isakmpd, ipsecctl */
-char *ctl_ipsec_test[] = { IPSECCTL, "-nf", REQTEMP, '\0' };
+char *ctl_ipsec_test[] = { IPSECCTL, "-nf", REQTEMP, 0 };
 struct ctl ctl_ipsec[] = {
 	{ "enable",     "enable service",
 	    { ISAKMPD, "-Kv", NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -239,7 +239,7 @@ struct ctl ctl_ipsec[] = {
 };
 
 /* iked, ikectl */
-char *ctl_ike_test[] = { IKED, "-nf", REQTEMP, '\0' };
+char *ctl_ike_test[] = { IKED, "-nf", REQTEMP, 0 };
 struct ctl ctl_ike[] = {
 	{ "enable",	"enable service",
 	    { IKED, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -264,7 +264,7 @@ struct ctl ctl_ike[] = {
 };
 
 /* dvmrpd */
-char *ctl_dvmrp_test[] = { DVMRPD, "-nf", REQTEMP, '\0' };
+char *ctl_dvmrp_test[] = { DVMRPD, "-nf", REQTEMP, 0 };
 struct ctl ctl_dvmrp[] = {
 	{ "enable",     "enable service",
 	    { DVMRPD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -284,7 +284,7 @@ struct ctl ctl_rtadv[] = {
 };
 
 /* ifstated */
-char *ctl_ifstate_test[] = { IFSTATED, "-nf", REQTEMP, '\0' };
+char *ctl_ifstate_test[] = { IFSTATED, "-nf", REQTEMP, 0 };
 struct ctl ctl_ifstate[] = {
 	{ "enable",     "enable service",
 	    { IFSTATED, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -308,7 +308,7 @@ struct ctl ctl_sasync[] = {
 };
 
 /* npppd, npppctl */
-char *ctl_nppp_test[] = { NPPPD, "-nf", REQTEMP, '\0' };
+char *ctl_nppp_test[] = { NPPPD, "-nf", REQTEMP, 0 };
 struct ctl ctl_nppp[] = {
 	{ "enable",	"enable service",
 	    { NPPPD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -327,7 +327,7 @@ struct ctl ctl_nppp[] = {
 };
 
 /* dhcpd */
-char *ctl_dhcp_test[] = { DHCPD, "-nc", REQTEMP, '\0' };
+char *ctl_dhcp_test[] = { DHCPD, "-nc", REQTEMP, 0 };
 struct ctl ctl_dhcp[] = {
 	{ "enable",     "enable service",
 	    { DHCPD, "-c", REQTEMP, "-l", DHCPLEASES, NULL }, NULL, DB_X_ENABLE,
@@ -341,7 +341,7 @@ struct ctl ctl_dhcp[] = {
 };
 
 /* snmpd, snmpctl */
-char *ctl_snmp_test[] = { SNMPD, "-nf", REQTEMP, '\0' };
+char *ctl_snmp_test[] = { SNMPD, "-nf", REQTEMP, 0 };
 struct ctl ctl_snmp[] = {
 	{ "enable",     "enable service",
 	    { SNMPD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -356,7 +356,7 @@ struct ctl ctl_snmp[] = {
 };
 
 /* sshd */
-char *ctl_sshd_test[] = { SSHD, "-tf", REQTEMP, '\0' };
+char *ctl_sshd_test[] = { SSHD, "-tf", REQTEMP, 0 };
 struct ctl ctl_sshd[] = {
 	{ "enable",	"enable service",
 	    { SSHD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -370,7 +370,7 @@ struct ctl ctl_sshd[] = {
 };
 
 /* ntpd */
-char *ctl_ntp_test[] = { NTPD, "-nf", REQTEMP, '\0' };
+char *ctl_ntp_test[] = { NTPD, "-nf", REQTEMP, 0 };
 struct ctl ctl_ntp[] = {
 	{ "enable",     "enable service",
 	    { NTPD, "-sf", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -383,7 +383,7 @@ struct ctl ctl_ntp[] = {
 };
 
 /* relayd, relayctl */
-char *ctl_relay_test[] = { RELAYD, "-nf", REQTEMP, '\0' };
+char *ctl_relay_test[] = { RELAYD, "-nf", REQTEMP, 0 };
 struct ctl ctl_relay[] = {
 	{ "enable",	"enable service",
 	    { RELAYD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -408,7 +408,7 @@ struct ctl ctl_relay[] = {
 };
 
 /* snmpd, snmpctl */
-char *ctl_smtp_test[] = { SMTPD, "-nf", REQTEMP, '\0' };
+char *ctl_smtp_test[] = { SMTPD, "-nf", REQTEMP, 0 };
 struct ctl ctl_smtp[] = {
 	{ "enable",	"enable service",
 	    { SMTPD, "-f", REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -483,7 +483,7 @@ struct ctl ctl_inet[] = {
 };
 
 /* ldapd, ldapctl */
-char *ctl_ldap_test[] = { LDAPD, "-nf", REQTEMP, '\0' };
+char *ctl_ldap_test[] = { LDAPD, "-nf", REQTEMP, 0 };
 struct ctl ctl_ldap[] = {
 	{ "enable",	"enable service",
 	    { LDAPD, REQTEMP, NULL }, NULL, DB_X_ENABLE, T_EXEC },
@@ -530,8 +530,8 @@ ctlhandler(int argc, char **argv, char *modhvar)
 	struct daemons *daemons;
 	struct ctl *x;
 	char tmpfile[PATH_MAX];
-	char *step_args[NOPTFILL] = { NULL, NULL, NULL, NULL, NULL, NULL, '\0' };
-	char *tmp_args[NOPTFILL] = { NULL, NULL, NULL, NULL, NULL, NULL, '\0' };
+	char *step_args[NOPTFILL] = { NULL, NULL, NULL, NULL, NULL, NULL, 0 };
+	char *tmp_args[NOPTFILL] = { NULL, NULL, NULL, NULL, NULL, NULL, 0 };
 	char **fillargs;
 
 	/* loop daemon list to find table pointer */
