@@ -143,6 +143,35 @@ Step 7. 关闭和移除OpenBSD系统启动自动化配置
   0 packets input, 0 bytes, 0 errors, 0 drops
   0 packets output, 0 bytes, 0 errors, 0 unsupported
 
+查看特定接口
+firewall#show interface em1
+% em1
+  Interface is up (last change 00:47:04), protocol is up
+  Interface type Ethernet (Broadcast), hardware address 00:0c:29:a3:5b:50
+  Media type autoselect (1000baseT full-duplex,master), status active
+  Internet address 192.168.49.135/24
+  rdomain 0, MTU 1500 bytes (hardmtu 16110), Line Rate 1000 Mbps
+  6394 packets input, 508817 bytes, 0 errors, 0 drops
+  5483 packets output, 688524 bytes, 0 errors, 0 unsupported
+  79 input, 125 output (average bytes/packet)
+  0 collisions
+
+if.c
+int show_int(int argc, char *argv[]); 函数
+
+Interface is up(last change 00:47:04)   // 接口状态，最后更新时间
+protocol is up                          // 接口协议启用
+Interface type Ethernet (Broadcast)     // 接口类型
+hardware address 00:0c:29:a3:5b:50      // 硬件接口地址
+Media type autoselect (1000baseT full-duplex,master)  // 网络接口
+Internet address 192.168.49.135/24      // 网络接口
+rdomain 0                               // 路由表域
+MTU 1500 bytes (hardmtu 16110)          // MTU
+Line Rate 1000 Mbps                     // 链路速率
+6394 packets input                      // 输入多少速率
+5483 packets output                     // 多少速率输出
+0 collisions                            // 冲突
+
   
 配置ntp服务器
   #

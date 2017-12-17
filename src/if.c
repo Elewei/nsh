@@ -42,6 +42,7 @@ void show_vnet_parent(int, char *);
 static struct ifmpwreq imrsave;
 static char imrif[IFNAMSIZ];
 
+/* 定义接口名称与类型 */
 static const struct {
 	char *name;
 	u_int8_t type;
@@ -80,6 +81,7 @@ void imr_init(char *ifname)
 	memset (&imrsave, 0, sizeof(imrsave));
 }
 
+/* 显示接口配置 */
 int
 show_int(int argc, char **argv)
 {
@@ -90,18 +92,16 @@ show_int(int argc, char **argv)
 	struct sockaddr_in *sin = NULL, *sinmask = NULL, *sindest;
 	struct sockaddr_in6 *sin6 = NULL, *sin6mask = NULL, *sin6dest;
 	struct timeval tv;
-
 	short tmp;
 	int ifs, br, flags, days, hours, mins, pntd;
 	int ippntd = 0;
 	int physrt, physttl;
 	time_t c;
 	char *type, *lladdr, *ifname = NULL;
-
 	char tmp_str[512], tmp_str2[512], ifdescr[IFDESCRSIZE];
 
 	if (argc == 3)
-		ifname = argv[2];
+		ifname = argv[2];     // 将网络接口名称参数赋值给数组指针变量ifname
 
 	/*
 	 * Show all interfaces when no ifname specified.
@@ -395,6 +395,11 @@ show_int(int argc, char **argv)
 	close(ifs);
 	return(0);
 }
+
+
+
+
+
 
 void
 show_vnet_parent(int ifs, char *ifname)

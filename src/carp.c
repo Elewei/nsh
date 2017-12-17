@@ -28,6 +28,8 @@ static struct intc {
 
 static const char *carp_bal_modes[] = { CARP_BAL_MODES };
 
+
+/*  */
 int
 intcarp(char *ifname, int ifs, int argc, char **argv)
 {

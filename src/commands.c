@@ -144,7 +144,7 @@ Menu showlist[] = {
 static int
 showcmd(int argc, char **argv)
 {
-	Menu *s;	/* pointer to current command */
+	Menu *s;	     /* Menu行指针指向当前 s */
 	int success = 0;
 
 	if (argc < 2) {
@@ -153,7 +153,7 @@ showcmd(int argc, char **argv)
 	}
 
 	/*
-	 * Validate show argument
+	 * 验证show命令
 	 */
 	s = (Menu *) genget(argv[1], (char **) showlist, sizeof(Menu));
 	if (s == 0) {
