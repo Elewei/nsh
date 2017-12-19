@@ -1,4 +1,4 @@
-#
+
 PROG= nsh
 
 # For use with flashrd:
